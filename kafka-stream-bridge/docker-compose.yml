@@ -1,0 +1,32 @@
+services:
+  stream-producer:
+    image: stream-producer  
+    build: ./stream-producer    
+    container_name: stream-producer 
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G  
+    ports:
+      - '6001:6001'   
+    networks:
+      - banknet
+      
+  stream-consumer:
+    image: stream-consumer  
+    build: ./stream-consumer
+    container_name: stream-consumer
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G  
+    ports:
+      - '7001:7001'   
+    networks:
+      - banknet
+      
+networks:
+  banknet:
+    external: true

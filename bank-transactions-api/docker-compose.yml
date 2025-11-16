@@ -1,0 +1,25 @@
+services:
+      
+  backend:
+    image: backend   
+    build: ./backend
+    container_name: backend
+    env_file:
+      - ./backend/.env
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - '2024:2024'
+      - '3001:3001'   
+    networks:
+      - banknet
+
+
+networks:
+  banknet:
+    external: true

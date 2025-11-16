@@ -1,0 +1,46 @@
+spring:    
+  thread:
+    virtual:
+      enabled: true
+  application.name: stream-consumer
+  cloud:
+    function:
+      definition: consumer;producer # producer consumer format, but I am only consumer
+    stream:
+      kafka:
+        bindings:
+          producer-out-0:
+            producer:
+              configuration:
+                value.serializer: io.project.app.converters.MessageSerializer
+          consumer-in-0:
+            consumer:
+              configuration:
+                value.deserializer: io.project.app.converters.MessageDeSerializer
+        binder:
+          brokers: kafka-0:9092,kafka-1:9092,kafka-2:9092
+
+      bindings:
+        producer-out-0:
+          destination: first-topic
+          producer:
+            useNativeEncoding: true # This enables using the custom serializer
+        consumer-in-0:
+          destination: first-topic
+          consumer:
+            use-native-decoding: true # This enables using the custom deserializer
+server:
+    tomcat:        
+      connection-timeout: 20m
+      keep-alive-timeout: 20m
+    shutdown: GRACEFUL
+    http2:
+     enabled: true
+    port: 7001
+    servlet:
+      session:
+        timeout: 10m
+    compression:
+      enabled: true
+      mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+      min-response-size: 1024

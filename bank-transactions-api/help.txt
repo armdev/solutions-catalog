@@ -1,0 +1,13 @@
+mkdir -p ~/volumes/data/pmatser18/data
+mkdir -p  ~/volumes/data/pgslave18/data
+sudo chmod -Rf 777 ~/volumes/data/
+
+1.	Make sure you have volumes for postgres and pgadmin are created with rigth permissions:
+
+        a. mkdir -p ~/volumes/data/pmatser18/data & chmod 755 ~/volumes/data/pgmaster/data
+
+        b. mkdir -p ~/volumes/data/pgslave18/data & chmod 755 ~/volumes/data/pgslave/data
+
+        c. mkdir -p ~/volumes/data/pgbackup/_data/pgadmin & chown -R 5050:5050 ~/volumes/data/pgbackup/_data/pgadmin
+
+        
