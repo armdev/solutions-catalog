@@ -4,7 +4,7 @@ Spring Cloud Stream & Kafka Bridge
 
 # Your machine
 
-docker, docker compose, OpenJDK 22, Apache Maven
+docker, docker compose, Java 25, Apache Maven
 
 # Getting Started
 
@@ -13,5 +13,6 @@ docker, docker compose, OpenJDK 22, Apache Maven
 3.  Enjoy
 
 docker logs --follow stream-consumer
+
 
 
