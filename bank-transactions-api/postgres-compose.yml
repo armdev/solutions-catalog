@@ -40,7 +40,27 @@ services:
     networks:
       - banknet
   
-      
+  pgmanage:
+    image: cmdpromptinc/pgmanage-enterprise:latest
+    container_name: pgmanage
+    ports:
+      - "5051:8000"               # host:container
+    environment:
+      PGMANAGE_LISTEN_PORT: 8000
+    volumes:     
+      - ~/volumes/data/appdata:/appdata
+    stdin_open: true            # equivalent to -it, admin:admin https://hub.docker.com/r/cmdpromptinc/pgmanage-enterprise
+    depends_on:
+      - postgresql-master
+      - postgresql-slave
+    links:
+      - postgresql-master
+      - postgresql-slave
+    tty: true
+    networks:
+      - banknet
+    
+    
   pgadmin:    
     image: dpage/pgadmin4:9.10.0
     container_name: pgadmin
