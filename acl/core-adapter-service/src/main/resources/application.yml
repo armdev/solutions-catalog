@@ -53,6 +53,35 @@ server:
     min-response-size: 1024
 
 spring:
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    driver-class-name: ${DB_DRIVER:oracle.jdbc.OracleDriver}
+    type: oracle.ucp.jdbc.PoolDataSourceImpl
+
+    # Optional: UCP (Universal Connection Pool) configuration
+    oracleucp:
+      connection-pool-name: ${DB_CONNECTION_POOL_NAME:UCPSampleApplication}
+      connection-factory-class-name: ${DB_CONNECTION_FACTORY_CLASS:oracle.jdbc.pool.OracleDataSource}
+      initial-pool-size: 5
+      min-pool-size: 5
+      max-pool-size: 20
+      timeout-check-interval: 60
+      inactive-connection-timeout: 300
+
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: none   # <-- create / create-drop / update / validate / none
+
   application.name: ${MICROSERVICE}
 
   profiles.active: ${ENV:dev}
@@ -68,65 +97,9 @@ spring:
       service-id: ${MICROSERVICE}
       enabled: true
 
-  datasource:
-    url: ${POSTGRES_URI}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-
-    hikari:
-      pool-name: ${MICROSERVICE}
-      maximum-pool-size: 50
-      minimum-idle: 10
-      connection-timeout: 10000
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      validation-timeout: 5000
-      connection-test-query: SELECT 1   # FIXED
-      leak-detection-threshold: 0       # OK but usually not needed
-
-  jpa:
-    show-sql: false
-    database: POSTGRESQL
-
-    hibernate:
-      ddl-auto: update
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-      # dialect removed — Hibernate auto-selects it
-
-      query:
-        plan-cache-max-size: 16000
-        plan-parameter-metadata-max-size: 16000
-
-    properties:
-      hibernate:
-        jdbc.batch_size: 100
-        order_inserts: true
-        order_updates: true
-        generate_statistics: false
-        cache.use_second_level_cache: false
-        temp.use_jdbc_metadata_defaults: false
-
-    sql.init.platform: POSTGRESQL
-
-  jackson.serialization.write_dates_as_timestamps: false
-
-
-
+  
 logging:
-#  structured:
-#    format.console: ecs
-#    format.file: ecs
-#
-#    json.add:
-#      host: ${MICROSERVICE}
-#      version: 1.0
-#
-#    ecs.service:
-#      name: ${MICROSERVICE}
-#      version: 1.0
-#      environment: ${ENV}
-#      node-name: primary
+
 
   pattern.level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
 

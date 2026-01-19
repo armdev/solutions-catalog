@@ -1,0 +1,30 @@
+services:
+  oracle:
+    image: gvenzl/oracle-xe:21
+    container_name: oracle
+    ports:
+      - "1521:1521"
+    environment:    
+      ORACLE_PASSWORD: p@ssword1
+      ORACLE_PWD: p@ssword1   # alias, optional
+      ORACLE_CHARACTERSET: AL32UTF8
+      ORACLE_DATABASE: XE1
+      APP_USER: appuser
+      APP_USER_PASSWORD: apppass1
+      TZ: UTC
+    volumes:
+      - ~/volumes/oracle7/oradata:/opt/oracle/oradata
+    networks:
+      - banknet
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sqlplus", "-L", "system/p@ssword1@localhost/XE1", "@healthcheck.sql"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+
+networks:
+  banknet:
+    external: true
+

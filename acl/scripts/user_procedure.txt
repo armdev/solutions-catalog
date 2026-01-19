@@ -1,0 +1,30 @@
+CREATE OR REPLACE PROCEDURE IBANK.get_customer_by_id (
+    p_customer_id IN  U_CUSTOMER.CUSTOMERID%TYPE,
+    o_customer    OUT U_CUSTOMER.CUSTOMER%TYPE,
+    o_email       OUT U_CUSTOMER.EMAIL%TYPE,
+    o_name_e      OUT U_CUSTOMER.NAME_E%TYPE,
+    o_personnum   OUT U_CUSTOMER.PERSONNUM%TYPE
+) AS
+BEGIN
+    SELECT
+        customer,
+        email,
+        name_e,
+        personnum
+    INTO
+        o_customer,
+        o_email,
+        o_name_e,
+        o_personnum
+    FROM U_CUSTOMER
+    WHERE customerid = p_customer_id;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        o_customer  := NULL;
+        o_email     := NULL;
+        o_name_e    := NULL;
+        o_personnum := NULL;
+END;
+/
+

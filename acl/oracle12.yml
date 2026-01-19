@@ -1,0 +1,21 @@
+services:
+  oracle-db-1:
+    image: truevoly/oracle-12c
+    container_name: oracle
+    ports:
+      - "1521:1521"
+      - "8080:8080"      
+    environment:
+      ORACLE_SID: HOME1
+      ORACLE_PWD: p@ssword1
+      ORACLE_CHARACTERSET: WE8MSWIN1252
+    volumes:
+      - ~/volumes/oracl12a/oradata:/opt/oracle/oradata
+    networks:
+      - banknet
+    restart: unless-stopped  
+
+networks:
+  banknet:
+    external: true
+
