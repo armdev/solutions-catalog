@@ -1,0 +1,23 @@
+services:
+  
+  core-adapter-service:
+    container_name: core-adapter-service
+    image: core-adapter-service
+    build:
+      context: ./core-adapter-service
+      dockerfile: Dockerfile
+    env_file:
+      - ./core-adapter-service/.env
+    environment:
+      JAVA_OPTS: "-Xms256m -Xmx1024m"
+    ports:
+      - "9090:9090"
+    expose:
+      - "3001"
+    networks:
+      - banknet
+    restart: unless-stopped   
+ 
+networks:
+  banknet:
+    external: true
