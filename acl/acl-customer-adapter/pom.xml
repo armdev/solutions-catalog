@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>io.project.acl</groupId>
-    <artifactId>core-adapter-service</artifactId>
+    <artifactId>acl-customer-adapter</artifactId>
     <version>1.0</version>
-    <name>core-adapter-service</name>
-    <description>core-adapter-service</description>
+    <name>acl-customer-adapter</name>
+    <description>acl-customer-adapter</description>
     <url/>
     <licenses>
         <license/>
@@ -152,7 +152,7 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <finalName>core-adapter-service</finalName>
+        <finalName>acl-customer-adapter</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

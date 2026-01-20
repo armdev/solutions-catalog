@@ -6,7 +6,7 @@ RUN adduser -D -h /home/stmt2076x -s /bin/sh stmt2076x \
     && chown -R stmt2076x:stmt2076x /opt/app
 
 
-COPY target/core-adapter-service.jar /opt/app/core-adapter-service.jar
+COPY target/acl-customer-adapter.jar /opt/app/acl-customer-adapter.jar
 
 USER stmt2076x
 
@@ -33,7 +33,7 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS \
     -Dsun.net.client.defaultReadTimeout=30000 \
     -Djava.security.egd=file:/dev/urandom \
     -XshowSettings:vm \
-    -jar /opt/app/core-adapter-service.jar"]
+    -jar /opt/app/acl-customer-adapter.jar"]
 
 
 

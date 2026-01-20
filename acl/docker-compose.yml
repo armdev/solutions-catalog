@@ -1,13 +1,13 @@
 services:
   
-  core-adapter-service:
-    container_name: core-adapter-service
-    image: core-adapter-service
+  acl-customer-adapter:
+    container_name: acl-customer-adapter
+    image: acl-customer-adapter
     build:
-      context: ./core-adapter-service
+      context: ./acl-customer-adapter
       dockerfile: Dockerfile
     env_file:
-      - ./core-adapter-service/.env
+      - ./acl-customer-adapter/.env
     environment:
       JAVA_OPTS: "-Xms256m -Xmx1024m"
     ports:

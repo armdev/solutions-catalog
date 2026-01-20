@@ -25,4 +25,4 @@ docker ps
 
 # === Tail logs from bank-tax-exchange ===
 
-docker logs -f core-adapter-service
+docker logs -f acl-customer-adapter
