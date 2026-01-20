@@ -122,3 +122,68 @@ RATES:
 ASHIB schema package
 P_WEBSOURCE_DC.getCurrInfo
 
+create or replace PACKAGE       P_WEBSOURCE_DC IS
+
+  procedure getCurrInfo(aj_Request in out nocopy json,
+                        aj_Resp    in out nocopy json);
+
+  procedure getCustInfo(aj_Request in out nocopy json,
+                        aj_Resp    in out nocopy json);
+
+  procedure getAccInfo(aj_Request in out nocopy json,
+                       aj_Resp    in out nocopy json);
+
+  procedure getDeposInfo(aj_Request in out nocopy json,
+                         aj_Resp    in out nocopy json);
+
+  procedure p_getCardInfo(aj_Request in out nocopy json,
+                          aj_Resp    in out nocopy json);
+
+  procedure p_getLoanInfo(aj_Request in out nocopy json,
+                          ac_Resp    in out nocopy clob);
+
+  procedure p_getPythonInfo(aj_Request in out nocopy json,
+                            aj_Resp    in out nocopy json);
+
+  PROCEDURE BPMgetLoanInfo(aj_Request IN OUT NOCOPY JSON,
+                           ac_Resp    IN OUT NOCOPY CLOB);
+
+  function n_OwnerPerson(av_owner varchar2) return number;
+
+  function i_countGoldLoan(ln_cust p_type.t_customer, ai_months number)
+    return int;
+
+  function i_countLoan(ln_cust p_type.t_customer, ai_months number)
+    return int;
+
+  function i_countDepos(ln_cust p_type.t_customer, ai_months number)
+    return int;
+
+  function i_balGoldLoan(ln_cust p_type.t_customer) return int;
+
+  function i_Salary(ln_cust p_type.t_customer) return int;
+
+  function i_cardTransCnt(an_cust p_type.T_CUSTOMER, ai_months int)
+    return int;
+
+  function i_cardTransAmo(an_cust p_type.T_CUSTOMER, ai_months int)
+    return int;
+
+  function i_NonCashCnt(an_cust p_type.T_CUSTOMER, ai_months int)
+    return p_type.T_AMOUNT;
+
+  function i_NonCashAmo(an_cust p_type.T_CUSTOMER, ai_months int) return int;
+
+  function n_NonCashWgt(an_cust p_type.T_CUSTOMER, ai_months int)
+    return p_type.T_AMOUNT;
+
+  function i_AvgAmoEquiv(an_cust p_type.T_CUSTOMER, ai_months int) return int;
+
+  function i_CasinoTrn(an_cust p_type.T_CUSTOMER, ai_months int)
+    return p_type.T_AMOUNT;
+
+  function i_goldProlong(an_cust p_type.T_CUSTOMER, ai_months int)
+    return p_type.T_AMOUNT;
+
+END P_WEBSOURCE_DC;
+
