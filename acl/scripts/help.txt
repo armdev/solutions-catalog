@@ -6,3 +6,57 @@ hostname localhost
 port 1521
 SID xe
 password oracle
+
+---------------------------
+queries
+
+select a.*,p_dict.v_Name('RATE', 'KIND', a.kind) Type, P_Currency.n_Rate(a.currency, sysdate, a.kind) from
+(select distinct t.currency,
+t.kind
+from U_rate t where t.currency is not null and t.rtdate >= DATE '2026-01-05' and t.branch = 'ALL'
+) a
+
+improved
+
+SELECT
+    a.*,
+    p_dict.v_Name('RATE', 'KIND', a.kind)       AS kind_name,
+    P_Currency.n_Rate(a.currency, SYSDATE, a.kind) AS rate_value
+FROM (
+    SELECT DISTINCT
+        t.currency,
+        t.kind
+    FROM U_rate t
+    WHERE t.currency IS NOT NULL
+      AND t.rtdate >= DATE '2026-01-05'
+      AND t.branch = 'ALL'
+) a;
+
+columns:
+CURRENCY, KIND, KIND_NAME, RATE_VALUE
+
+  CREATE TABLE "BANK"."U_RATE" 
+   (	"DEPOSIT" NUMBER(1,0) DEFAULT 0 NOT NULL ENABLE, 
+	"SECURITY" VARCHAR2(16 BYTE) DEFAULT '0' NOT NULL ENABLE, 
+	"CURRENCY" VARCHAR2(4 BYTE) NOT NULL ENABLE, 
+	"KIND" NUMBER(2,0) DEFAULT 1 NOT NULL ENABLE, 
+	"RTDATE" DATE NOT NULL ENABLE, 
+	"RATE" NUMBER NOT NULL ENABLE, 
+	"EDITED" NUMBER(1,0) DEFAULT 0 NOT NULL ENABLE, 
+	"BRANCH" CHAR(3 BYTE) DEFAULT SYS_CONTEXT('LSBANK','BRANCH') NOT NULL ENABLE, 
+	"TSHOST" VARCHAR2(40 BYTE), 
+	"TSTIME" DATE, 
+	"TSTRANS" VARCHAR2(22 BYTE), 
+	"TSID" NUMBER(15,0), 
+	"TSRECID" NUMBER(15,0), 
+	"TSOWNER" VARCHAR2(4 BYTE), 
+	"TSUSER" VARCHAR2(4 BYTE), 
+	"TSLOGIN" VARCHAR2(30 BYTE), 
+	"POSVARIATION" NUMBER(8,4), 
+	"NEGVARIATION" NUMBER(8,4), 
+	"CHOICE" NUMBER(15,0) DEFAULT 0 NOT NULL ENABLE, 
+	"BASEKIND" NUMBER(3,0) DEFAULT 0 NOT NULL ENABLE, 
+	"PERMITCHANGES" NUMBER(1,0) DEFAULT 0 NOT NULL ENABLE, 
+	 CONSTRAINT "K_URATE_BRA_CUR_SEC_KIN_RTD" PRIMARY KEY ("BRANCH", "CURRENCY", "SECURITY", "KIND", "CHOICE", "RTDATE")
+
+
