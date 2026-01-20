@@ -60,3 +60,65 @@ CURRENCY, KIND, KIND_NAME, RATE_VALUE
 	 CONSTRAINT "K_URATE_BRA_CUR_SEC_KIN_RTD" PRIMARY KEY ("BRANCH", "CURRENCY", "SECURITY", "KIND", "CHOICE", "RTDATE")
 
 
+RATES:
+{
+  "EUR" : {
+    "Cash" : {
+      "Buy" : 438,
+      "Sell" : 453
+    },
+    "CashLess" : {
+      "Buy" : 438,
+      "Sell" : 453
+    },
+    "CB Rate" : 445.89
+  },
+  "GBP" : {
+    "Cash" : {
+      "Buy" : 506,
+      "Sell" : 528
+    },
+    "CashLess" : {
+      "Buy" : 506,
+      "Sell" : 528
+    },
+    "CB Rate" : 516.55
+  },
+  "USD" : {
+    "Cash" : {
+      "Buy" : 380,
+      "Sell" : 386
+    },
+    "CashLess" : {
+      "Buy" : 380,
+      "Sell" : 386
+    },
+    "CB Rate" : 390
+  },
+  "GEL" : {
+    "Cash" : {
+      "Buy" : 138,
+      "Sell" : 146
+    },
+    "CashLess" : {
+      "Buy" : 138,
+      "Sell" : 146
+    },
+    "CB Rate" : 141.85
+  },
+  "RUR" : {
+    "Cash" : {
+      "Buy" : 4.71,
+      "Sell" : 4.95
+    },
+    "CashLess" : {
+      "Buy" : 4.6,
+      "Sell" : 4.95
+    },
+    "CB Rate" : 4.7703
+  }
+}
+
+ASHIB schema package
+P_WEBSOURCE_DC.getCurrInfo
+
