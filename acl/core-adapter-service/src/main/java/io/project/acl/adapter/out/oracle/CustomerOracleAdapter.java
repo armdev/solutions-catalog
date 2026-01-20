@@ -1,61 +1,145 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package io.project.acl.adapter.out.oracle;
 
-import io.project.acl.domain.dto.CustomerDto;
+import io.project.acl.domain.dto.CustomerRecord;
 import io.project.acl.domain.port.CustomerPort;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Optional;
 import javax.sql.DataSource;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CustomerOracleAdapter implements CustomerPort{
+@AllArgsConstructor
+public class CustomerOracleAdapter implements CustomerPort {
+
+    private static final String PROC_GET_BY_ID =
+            "{ call IBANK.get_customer_by_id(?, ?, ?, ?, ?) }";
+
+    private static final String PROC_GET_BY_PERSONNUM =
+            "{ call IBANK.get_customer_by_personnum(?, ?, ?, ?, ?) }";
+
+    private static final String PROC_GET_BY_EMAIL =
+            "{ call IBANK.get_customer_by_email(?, ?, ?, ?, ?) }";
 
     private final DataSource dataSource;
 
-    public CustomerOracleAdapter(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
     @Override
-    public Optional<CustomerDto> findCustomerById(Long customerId) {
-
-        String sql = "{ call IBANK.get_customer_by_id(?, ?, ?, ?, ?) }";
-
-        try (Connection connection = dataSource.getConnection(); CallableStatement cs = connection.prepareCall(sql)) {
+    public CustomerRecord findCustomerById(Long customerId) {
+        try (Connection con = dataSource.getConnection();
+             CallableStatement cs = con.prepareCall(PROC_GET_BY_ID)) {
 
             cs.setLong(1, customerId);
 
-            cs.registerOutParameter(2, Types.VARCHAR);
-            cs.registerOutParameter(3, Types.VARCHAR);
-            cs.registerOutParameter(4, Types.VARCHAR);
-            cs.registerOutParameter(5, Types.VARCHAR);
+            cs.registerOutParameter(2, Types.VARCHAR); // customer
+            cs.registerOutParameter(3, Types.VARCHAR); // email
+            cs.registerOutParameter(4, Types.VARCHAR); // name_e
+            cs.registerOutParameter(5, Types.VARCHAR); // personnum
 
             cs.execute();
 
-            String customer = cs.getString(2);
-            String email = cs.getString(3);
-            String nameE = cs.getString(4);
-            String personNum = cs.getString(5);
-
-            if (customer == null && email == null
-                    && nameE == null && personNum == null) {
-                return Optional.empty();
-            }
-
-            return Optional.of(
-                    new CustomerDto(customerId, customer, email, nameE, personNum)
+            return mapCustomer(
+                    customerId,
+                    cs.getString(2),
+                    cs.getString(3),
+                    cs.getString(4),
+                    cs.getString(5)
             );
 
         } catch (SQLException ex) {
-           ex.printStackTrace();
+            throw new IllegalStateException(
+                    "Oracle call failed: get_customer_by_id, customerId=" + customerId, ex);
         }
-        return Optional.empty();
+    }
+
+    @Override
+    public CustomerRecord findCustomerBySsn(String ssn) {
+        try (Connection con = dataSource.getConnection();
+             CallableStatement cs = con.prepareCall(PROC_GET_BY_PERSONNUM)) {
+
+            cs.setString(1, ssn);
+
+            cs.registerOutParameter(2, Types.BIGINT);  // customerId
+            cs.registerOutParameter(3, Types.VARCHAR); // customer
+            cs.registerOutParameter(4, Types.VARCHAR); // email
+            cs.registerOutParameter(5, Types.VARCHAR); // name_e
+
+            cs.execute();
+
+            Long customerId = cs.getLong(2);
+            if (cs.wasNull()) {
+                return null;
+            }
+
+            return mapCustomer(
+                    customerId,
+                    cs.getString(3),
+                    cs.getString(4),
+                    cs.getString(5),
+                    ssn
+            );
+
+        } catch (SQLException ex) {
+            throw new IllegalStateException(
+                    "Oracle call failed: get_customer_by_personnum, ssn=" + ssn, ex);
+        }
+    }
+
+    @Override
+    public CustomerRecord findCustomerByEmail(String email) {
+        try (Connection con = dataSource.getConnection();
+             CallableStatement cs = con.prepareCall(PROC_GET_BY_EMAIL)) {
+
+            cs.setString(1, email);
+
+            cs.registerOutParameter(2, Types.BIGINT);  // customerId
+            cs.registerOutParameter(3, Types.VARCHAR); // customer
+            cs.registerOutParameter(4, Types.VARCHAR); // personnum
+            cs.registerOutParameter(5, Types.VARCHAR); // name_e
+
+            cs.execute();
+
+            Long customerId = cs.getLong(2);
+            if (cs.wasNull()) {
+                return null;
+            }
+
+            return mapCustomer(
+                    customerId,
+                    cs.getString(3),
+                    email,
+                    cs.getString(5),
+                    cs.getString(4)
+            );
+
+        } catch (SQLException ex) {
+            throw new IllegalStateException(
+                    "Oracle call failed: get_customer_by_email, email=" + email, ex);
+        }
+    }
+
+    /* -------------------- mapping -------------------- */
+
+    private CustomerRecord mapCustomer(
+            Long customerId,
+            String customer,
+            String email,
+            String nameE,
+            String personNum) {
+
+        // Oracle NO_DATA_FOUND → all OUT params NULL
+        if (customer == null && email == null
+                && nameE == null && personNum == null) {
+            return null;
+        }
+
+        return new CustomerRecord(
+                customerId,
+                customer,
+                email,
+                nameE,
+                personNum
+        );
     }
 }

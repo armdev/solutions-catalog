@@ -4,6 +4,7 @@
  */
 package io.project.acl.adapter.out.messaging;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,13 +12,14 @@ import org.springframework.stereotype.Component;
  * @author armen_arzumanyan
  */
 @Component
+@Slf4j
 public class OutboxPublisher {
 
-    public void publishBalanceInquiry(String accountId) {
+    public void publishCustomerInquiry(Long customerId) {
 
         // Simulate outbox write
-        System.out.println(
-            "Outbox event stored: BALANCE_INQUIRY for account " + accountId
+        log.info(
+                "Outbox event stored: request for customerId " + customerId
         );
     }
 }

@@ -12,7 +12,7 @@ public class OpenApiConfiguration {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("core-adapter-service")
+                .group("core-adapter")
                 .packagesToScan("io.project")
                 .pathsToMatch("/api/**")
                 .build();

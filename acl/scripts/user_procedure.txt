@@ -28,3 +28,64 @@ EXCEPTION
 END;
 /
 
+
+CREATE OR REPLACE PROCEDURE IBANK.get_customer_by_personnum (
+    p_personnum   IN  U_CUSTOMER.PERSONNUM%TYPE,
+    o_customerid  OUT U_CUSTOMER.CUSTOMERID%TYPE,
+    o_customer    OUT U_CUSTOMER.CUSTOMER%TYPE,
+    o_email       OUT U_CUSTOMER.EMAIL%TYPE,
+    o_name_e      OUT U_CUSTOMER.NAME_E%TYPE
+) AS
+BEGIN
+    SELECT
+        customerid,
+        customer,
+        email,
+        name_e
+    INTO
+        o_customerid,
+        o_customer,
+        o_email,
+        o_name_e
+    FROM U_CUSTOMER
+    WHERE personnum = p_personnum;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        o_customerid := NULL;
+        o_customer   := NULL;
+        o_email      := NULL;
+        o_name_e     := NULL;
+END;
+/
+
+
+CREATE OR REPLACE PROCEDURE IBANK.get_customer_by_email (
+    p_email       IN  U_CUSTOMER.EMAIL%TYPE,
+    o_customerid  OUT U_CUSTOMER.CUSTOMERID%TYPE,
+    o_customer    OUT U_CUSTOMER.CUSTOMER%TYPE,
+    o_personnum   OUT U_CUSTOMER.PERSONNUM%TYPE,
+    o_name_e      OUT U_CUSTOMER.NAME_E%TYPE
+) AS
+BEGIN
+    SELECT
+        customerid,
+        customer,
+        personnum,
+        name_e
+    INTO
+        o_customerid,
+        o_customer,
+        o_personnum,
+        o_name_e
+    FROM U_CUSTOMER
+    WHERE email = p_email;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        o_customerid := NULL;
+        o_customer   := NULL;
+        o_personnum  := NULL;
+        o_name_e     := NULL;
+END;
+/
